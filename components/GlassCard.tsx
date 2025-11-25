@@ -10,7 +10,7 @@ interface GlassCardProps {
 
 const GlassCard: React.FC<GlassCardProps> = ({ children, className = '', title, icon, action }) => {
   return (
-    <div className={`glass-panel rounded-2xl p-6 transition-all duration-300 hover:bg-slate-800/50 flex flex-col ${className}`}>
+    <div className={`glass-panel rounded-2xl p-4 md:p-6 transition-all duration-300 hover:bg-slate-800/50 flex flex-col ${className}`}>
       {(title || icon) && (
         <div className="flex items-center justify-between mb-4 shrink-0">
           <div className="flex items-center gap-3">

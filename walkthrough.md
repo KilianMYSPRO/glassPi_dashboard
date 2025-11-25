@@ -64,6 +64,7 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 - **Improvement**: Better card visibility on mobile devices.
 - **Optimization**: Reduced padding/gaps and adjusted widget heights for smaller screens.
 - **Touch**: Improved drag-and-drop interaction on touch devices.
+- **Layout**: Fixed overlapping cards and overflowing text by implementing responsive heights and text truncation.
 - **Security**: Moved sensitive credentials (AdGuard) to `.env` file.
 
 ## Technical Details
