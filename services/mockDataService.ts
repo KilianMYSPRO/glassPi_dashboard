@@ -264,13 +264,20 @@ const getDockerContainers = async () => {
 
     if (!Array.isArray(containers)) return null;
 
-    return containers.map((c: any) => ({
-      name: c.name,
-      status: (c.Status === 'running' || (c.Status && c.Status.toLowerCase().includes('up'))) ? 'up' : 'down',
-      icon: getIconForService(c.name),
-      url: getUrlForService(c.name),
-      uptime: 100
-    }));
+    return containers.map((c: any) => {
+      // robust status check
+      const rawStatus = c.Status || c.status || c.State || c.state || '';
+      const s = String(rawStatus).toLowerCase();
+      const isUp = s === 'running' || s.includes('up') || s.includes('healthy');
+
+      return {
+        name: c.name,
+        status: isUp ? 'up' : 'down',
+        icon: getIconForService(c.name),
+        url: getUrlForService(c.name),
+        uptime: 100
+      };
+    });
   } catch (e) {
     DOCKER_PLUGIN_AVAILABLE = false;
     return null;
