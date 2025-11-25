@@ -143,24 +143,24 @@ const App: React.FC = () => {
 
         <CollapsibleSection title="System Overview" defaultOpen={true}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
-            <div className="md:col-span-8 lg:col-span-8 h-[250px] md:h-[350px]">
+            <div className="md:col-span-8 lg:col-span-8 min-h-[320px] md:h-[350px]">
               <NetworkGraph history={data.speedtestHistory} error={data.speedtestError} />
             </div>
-            <div className="md:col-span-4 lg:col-span-4 h-[180px] md:h-[350px]">
+            <div className="md:col-span-4 lg:col-span-4 min-h-[200px] md:h-[350px]">
               <WeatherWidget services={data.services} />
             </div>
 
-            <div className="md:col-span-4 lg:col-span-4 h-[220px] md:h-[300px]">
+            <div className="md:col-span-4 lg:col-span-4 min-h-[250px] md:h-[300px]">
               <AdGuardWidget stats={data.adguard} />
             </div>
-            <div className="md:col-span-4 lg:col-span-4 h-[220px] md:h-[300px]">
+            <div className="md:col-span-4 lg:col-span-4 min-h-[250px] md:h-[300px]">
               <UptimeKumaWidget monitors={data.kuma} />
             </div>
-            <div className="md:col-span-4 lg:col-span-4 h-[220px] md:h-[300px]">
+            <div className="md:col-span-4 lg:col-span-4 min-h-[250px] md:h-[300px]">
               <SystemHealth metrics={data.system} />
             </div>
 
-            <div className="md:col-span-12 lg:col-span-12 h-[300px]">
+            <div className="md:col-span-12 lg:col-span-12 min-h-[300px]">
               <AiAnalyst data={data} />
             </div>
           </div>

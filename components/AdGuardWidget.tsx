@@ -8,14 +8,14 @@ interface AdGuardWidgetProps {
 }
 
 const StatRow: React.FC<{ label: string; value: string | number; icon: React.ReactNode; colorClass: string }> = ({ label, value, icon, colorClass }) => (
-  <div className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
-    <div className="flex items-center gap-3">
-      <div className={`p-2 rounded-lg bg-white/5 ${colorClass}`}>
+  <div className="flex items-center justify-between py-3 border-b border-white/5 last:border-0 gap-2">
+    <div className="flex items-center gap-3 min-w-0">
+      <div className={`p-2 rounded-lg bg-white/5 ${colorClass} shrink-0`}>
         {icon}
       </div>
-      <span className="text-gray-300 text-sm">{label}</span>
+      <span className="text-gray-300 text-sm truncate">{label}</span>
     </div>
-    <span className="font-semibold text-white tracking-wide">{value}</span>
+    <span className="font-semibold text-white tracking-wide truncate shrink-0">{value}</span>
   </div>
 );
 
