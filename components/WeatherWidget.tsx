@@ -24,6 +24,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ services }) => {
     let weatherIcon = <Sun size={48} className="text-yellow-400 animate-pulse" />;
     let weatherTitle = "Sunny";
     let weatherDesc = "All systems operational";
+    let weatherClass = "weather-shiny";
     let bgGradient = "from-blue-400/10 to-yellow-400/10";
 
     if (isInternetDown || downServices >= 3) {
@@ -31,20 +32,23 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ services }) => {
         weatherTitle = "Stormy";
         weatherDesc = "Critical systems offline";
         bgGradient = "from-gray-900/50 to-purple-900/50";
+        weatherClass = "weather-storm";
     } else if (downServices > 0) {
         weatherIcon = <CloudRain size={48} className="text-blue-400" />;
         weatherTitle = "Rainy";
         weatherDesc = `${downServices} service${downServices > 1 ? 's' : ''} down`;
         bgGradient = "from-slate-800/50 to-blue-900/50";
+        weatherClass = "weather-rain";
     } else if (degradedServices > 0) {
         weatherIcon = <Cloud size={48} className="text-gray-400" />;
         weatherTitle = "Cloudy";
         weatherDesc = "Some services degraded";
         bgGradient = "from-slate-700/30 to-gray-600/30";
+        weatherClass = "";
     }
 
     return (
-        <GlassCard className={`h-full bg-gradient-to-br ${bgGradient} transition-all duration-500`}>
+        <GlassCard className={`h-full bg-gradient-to-br ${bgGradient} transition-all duration-500 ${weatherClass}`}>
             <div className="flex items-center justify-between h-full px-2">
                 <div className="flex flex-col justify-center">
                     <h3 className="text-2xl font-bold text-white mb-1">{weatherTitle}</h3>
