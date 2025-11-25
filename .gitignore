@@ -11,10 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+*.local
 .env
 .env.*
 !.env.example
-walkthrough.md
 
 # Editor directories and files
 .vscode/*

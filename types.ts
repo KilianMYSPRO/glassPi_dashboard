@@ -35,8 +35,9 @@ export interface DashboardState {
   system: SystemMetrics;
   adguard: AdGuardStats;
   speedtestHistory: SpeedTestResult[];
-  lastUpdated: Date;
   speedtestError?: string;
+  kuma?: any[];
+  lastUpdated: Date;
 }
 
 export enum GeminiModel {

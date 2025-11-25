@@ -1,0 +1,101 @@
+# Walkthrough - GlassPi Monitor Enhancements
+
+I have significantly enhanced the GlassPi Monitor with new features, improved layout, and better user customization.
+
+## Feature History
+
+### 1. Production Deployment (Latest)
+- **Feature**: Added Docker support for easy deployment.
+- **Implementation**:
+    - Created `Dockerfile` (multi-stage build).
+    - Created `docker-compose.yml`.
+    - Created `nginx.conf` for routing and proxying.
+
+### 2. AI System Analyst Fix
+- **Issue**: The AI Analyst was failing to generate reports.
+- **Fix**:
+    - Corrected API key access in `geminiService.ts` (switched from `process.env` to `import.meta.env`).
+    - Added missing `VITE_GEMINI_API_KEY` to `.env`.
+
+### 3. Collapsible Sections
+- **Feature**: Dashboard content is now organized into two collapsible sections: "Active Services" and "System Overview".
+- **Implementation**:
+    - Created `CollapsibleSection` component.
+    - Refactored `App.tsx` to use these sections.
+    - Improves mobile usability by allowing users to hide/show large sections.
+
+### 4. Custom Service Sorting
+- **Feature**: Users can now reorder service cards via drag-and-drop.
+- **Implementation**:
+    - Used `@dnd-kit` for drag-and-drop interactions.
+    - Persisted sort order in `localStorage`.
+    - Updated `ServiceStatus.tsx` to support "Manage Cards" mode with drag handles.
+
+### 5. Uptime Kuma Preview
+- **Feature**: A new widget displaying monitors from Uptime Kuma.
+- **Implementation**:
+    - Created `UptimeKumaWidget.tsx`.
+    - Fetches data from Uptime Kuma Status Page API.
+    - Added proxy in `vite.config.ts` to avoid CORS.
+
+### 6. Dashboard Layout Restructuring
+- **Change**: Reorganized the grid layout for better space utilization.
+- **Details**:
+    - **AdGuard Home**: Moved to its own 4-column slot (larger size).
+    - **Weather Widget**: Moved to top-right.
+    - **AI Analyst**: Moved to full-width bottom row.
+    - **System Health**: Kept in the middle row.
+
+### 7. Weather Widget
+- **Feature**: Visualizes system health as weather conditions (Sunny, Cloudy, Stormy).
+- **Details**:
+    - Ignores "watchtower" service to prevent false alarms.
+    - Dynamic icon and status text.
+
+### 8. Mobile Visibility & Security
+- **Improvement**: Better card visibility on mobile devices.
+- **Security**: Moved sensitive credentials (AdGuard) to `.env` file.
+
+## Technical Details
+
+### Dependencies Added
+- `@dnd-kit/core`
+- `@dnd-kit/sortable`
+- `@dnd-kit/utilities`
+
+### Key Files Modified
+- `App.tsx`: Main layout, state management, and section organization.
+- `components/CollapsibleSection.tsx`: New reusable component.
+- `components/ServiceStatus.tsx`: Drag-and-drop implementation.
+- `components/AdGuardWidget.tsx`: Layout and styling adjustments.
+- `services/mockDataService.ts`: Data fetching logic (Kuma, Docker).
+- `services/geminiService.ts`: AI analysis logic (fixed API key access).
+- `vite.config.ts`: Proxy configuration.
+- `Dockerfile`, `docker-compose.yml`, `nginx.conf`: Deployment configuration.
+
+## Deployment
+
+### Using Docker Compose (Recommended)
+1. Ensure you have a `.env` file with your credentials (see `.env.example`).
+2. Run:
+   ```bash
+   docker compose up -d --build
+   ```
+3. Access the dashboard at `http://localhost:3000`.
+
+### Manual Build
+1. Install dependencies: `npm install`
+2. Build the app: `npm run build`
+3. Serve the `dist` folder using any static file server.
+
+## Verification
+- **Build**: Verified `npm run build` completes successfully.
+- **AI Analyst**: Verified API key configuration and code fix.
+- **Sorting**: Verified drag-and-drop works and persists after refresh.
+- **Sections**: Verified expanding/collapsing sections works.
+- **Data**: Verified all widgets fetch and display data correctly.
+- **Layout**: Verified responsive layout on desktop and mobile.
+
+## Repository
+- **URL**: `https://github.com/KilianMYSPRO/glassPi_dashboard.git`
+- **Branch**: `main`

@@ -8,11 +8,18 @@ import NetworkGraph from './components/NetworkGraph';
 import AdGuardWidget from './components/AdGuardWidget';
 import AiAnalyst from './components/AiAnalyst';
 import WeatherWidget from './components/WeatherWidget';
+import UptimeKumaWidget from './components/UptimeKumaWidget';
+import CollapsibleSection from './components/CollapsibleSection';
 
 const App: React.FC = () => {
   const [data, setData] = useState<DashboardState | null>(null);
   const [loading, setLoading] = useState(true);
   const stateRef = useRef<DashboardState | null>(null);
+
+  const [serviceOrder, setServiceOrder] = useState<string[]>(() => {
+    const saved = localStorage.getItem('serviceOrder');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     stateRef.current = data;
@@ -32,19 +39,29 @@ const App: React.FC = () => {
     loadData();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (!stateRef.current) return;
+  const handleReorder = (newOrder: string[]) => {
+    setServiceOrder(newOrder);
+    localStorage.setItem('serviceOrder', JSON.stringify(newOrder));
+  };
 
-      const currentHistory = stateRef.current.speedtestHistory;
-      const currentServices = stateRef.current.services;
+  const getSortedServices = (services: ServiceHealth[]) => {
+    if (serviceOrder.length === 0) return services;
 
-      const newData = await fetchDashboardData(currentHistory, currentServices);
-      setData(newData);
-    }, 5000);
+    return [...services].sort((a, b) => {
+      const indexA = serviceOrder.indexOf(a.name);
+      const indexB = serviceOrder.indexOf(b.name);
 
-    return () => clearInterval(interval);
-  }, []);
+      // If both are in the order list, sort by index
+      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+
+      // If only one is in the list, put it first (or last, depending on preference - let's put known ones first)
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+
+      // If neither, alphabetical fallback
+      return a.name.localeCompare(b.name);
+    });
+  };
 
   const toggleService = (serviceName: string) => {
     if (!data) return;
@@ -72,6 +89,11 @@ const App: React.FC = () => {
       ...data,
       services: [...data.services, serviceToAdd]
     });
+
+    // Add to order list
+    const newOrder = [...serviceOrder, newService.name];
+    setServiceOrder(newOrder);
+    localStorage.setItem('serviceOrder', JSON.stringify(newOrder));
   };
 
   if (loading || !data) {
@@ -109,33 +131,40 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="grid grid-cols-1 md:grid-cols-12 gap-6">
-        <div className="md:col-span-12">
+      <main className="flex flex-col gap-8">
+        <CollapsibleSection title="Active Services" defaultOpen={true}>
           <ServiceStatus
-            services={data.services}
+            services={getSortedServices(data.services)}
             onToggleService={toggleService}
             onAddService={handleAddService}
+            onReorder={handleReorder}
           />
-        </div>
+        </CollapsibleSection>
 
-        <div className="md:col-span-8 lg:col-span-8 h-[350px]">
-          <NetworkGraph history={data.speedtestHistory} error={data.speedtestError} />
-        </div>
-        <div className="md:col-span-4 lg:col-span-4 flex flex-col gap-6 h-[350px]">
-          <div className="flex-1">
-            <WeatherWidget services={data.services} />
-          </div>
-          <div className="flex-1">
-            <AdGuardWidget stats={data.adguard} />
-          </div>
-        </div>
+        <CollapsibleSection title="System Overview" defaultOpen={true}>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="md:col-span-8 lg:col-span-8 h-[350px]">
+              <NetworkGraph history={data.speedtestHistory} error={data.speedtestError} />
+            </div>
+            <div className="md:col-span-4 lg:col-span-4 h-[350px]">
+              <WeatherWidget services={data.services} />
+            </div>
 
-        <div className="md:col-span-4 lg:col-span-5 h-[300px]">
-          <SystemHealth metrics={data.system} />
-        </div>
-        <div className="md:col-span-8 lg:col-span-7 h-[300px]">
-          <AiAnalyst data={data} />
-        </div>
+            <div className="md:col-span-4 lg:col-span-4 h-[300px]">
+              <AdGuardWidget stats={data.adguard} />
+            </div>
+            <div className="md:col-span-4 lg:col-span-4 h-[300px]">
+              <UptimeKumaWidget monitors={data.kuma} />
+            </div>
+            <div className="md:col-span-4 lg:col-span-4 h-[300px]">
+              <SystemHealth metrics={data.system} />
+            </div>
+
+            <div className="md:col-span-12 lg:col-span-12 h-[300px]">
+              <AiAnalyst data={data} />
+            </div>
+          </div>
+        </CollapsibleSection>
       </main>
 
       <footer className="text-center text-gray-500 text-xs py-4">

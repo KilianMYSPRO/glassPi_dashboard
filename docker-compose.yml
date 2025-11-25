@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  glasspi:
+    build: .
+    container_name: glasspi-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
+    environment:
+      - VITE_ADGUARD_URL=/adguard-api
+      - VITE_KUMA_URL=/kuma-api
