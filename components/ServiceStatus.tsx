@@ -55,7 +55,7 @@ const SortableServiceCard = ({ service, isEditing, onToggleService, getIcon, get
       <div className="flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3 overflow-hidden">
           {isEditing && (
-            <div className="text-gray-500 cursor-grab active:cursor-grabbing" {...attributes} {...listeners}>
+            <div className="text-gray-500 cursor-grab active:cursor-grabbing touch-none" {...attributes} {...listeners}>
               <GripVertical size={16} />
             </div>
           )}

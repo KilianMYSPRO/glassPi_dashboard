@@ -60,6 +60,8 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 
 ### 9. Mobile Visibility & Security
 - **Improvement**: Better card visibility on mobile devices.
+- **Optimization**: Reduced padding/gaps and adjusted widget heights for smaller screens.
+- **Touch**: Improved drag-and-drop interaction on touch devices.
 - **Security**: Moved sensitive credentials (AdGuard) to `.env` file.
 
 ## Technical Details
