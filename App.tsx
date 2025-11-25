@@ -7,6 +7,7 @@ import SystemHealth from './components/SystemHealth';
 import NetworkGraph from './components/NetworkGraph';
 import AdGuardWidget from './components/AdGuardWidget';
 import AiAnalyst from './components/AiAnalyst';
+import WeatherWidget from './components/WeatherWidget';
 
 const App: React.FC = () => {
   const [data, setData] = useState<DashboardState | null>(null);
@@ -34,10 +35,10 @@ const App: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       if (!stateRef.current) return;
-      
+
       const currentHistory = stateRef.current.speedtestHistory;
       const currentServices = stateRef.current.services;
-      
+
       const newData = await fetchDashboardData(currentHistory, currentServices);
       setData(newData);
     }, 5000);
@@ -49,7 +50,7 @@ const App: React.FC = () => {
     if (!data) return;
     setData({
       ...data,
-      services: data.services.map(s => 
+      services: data.services.map(s =>
         s.name === serviceName ? { ...s, enabled: !s.enabled } : s
       )
     });
@@ -96,39 +97,44 @@ const App: React.FC = () => {
             System Online • Raspberry Pi 5
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="glass-panel px-4 py-2 rounded-lg flex items-center gap-2 text-sm text-gray-300">
-             <LayoutDashboard size={16} />
-             <span>Dashboard</span>
+            <LayoutDashboard size={16} />
+            <span>Dashboard</span>
           </div>
           <div className="glass-panel p-2 rounded-lg text-gray-400 hover:text-white cursor-pointer transition-colors">
-             <Settings size={20} />
+            <Settings size={20} />
           </div>
         </div>
       </header>
 
       <main className="grid grid-cols-1 md:grid-cols-12 gap-6">
         <div className="md:col-span-12">
-           <ServiceStatus 
-              services={data.services} 
-              onToggleService={toggleService} 
-              onAddService={handleAddService}
-           />
+          <ServiceStatus
+            services={data.services}
+            onToggleService={toggleService}
+            onAddService={handleAddService}
+          />
         </div>
 
         <div className="md:col-span-8 lg:col-span-8 h-[350px]">
           <NetworkGraph history={data.speedtestHistory} error={data.speedtestError} />
         </div>
-        <div className="md:col-span-4 lg:col-span-4 h-[350px]">
-          <AdGuardWidget stats={data.adguard} />
+        <div className="md:col-span-4 lg:col-span-4 flex flex-col gap-6 h-[350px]">
+          <div className="flex-1">
+            <WeatherWidget services={data.services} />
+          </div>
+          <div className="flex-1">
+            <AdGuardWidget stats={data.adguard} />
+          </div>
         </div>
 
         <div className="md:col-span-4 lg:col-span-5 h-[300px]">
-           <SystemHealth metrics={data.system} />
+          <SystemHealth metrics={data.system} />
         </div>
         <div className="md:col-span-8 lg:col-span-7 h-[300px]">
-           <AiAnalyst data={data} />
+          <AiAnalyst data={data} />
         </div>
       </main>
 
