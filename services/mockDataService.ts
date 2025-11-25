@@ -23,6 +23,7 @@ const CONFIG = {
 // Internal state to track detected API versions and capabilities
 let GLANCES_API_VERSION: '2' | '3' | '4' | null = null;
 let DOCKER_PLUGIN_AVAILABLE = true; // Assume true until it fails
+let versionDetectionPromise: Promise<'2' | '3' | '4' | null> | null = null;
 
 // ==========================================
 // API CLIENT
@@ -45,37 +46,54 @@ const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout 
 };
 
 // Helper to determine Glances API version dynamically
-const fetchGlances = async (endpoint: string, suppressErrors = false) => {
-  // If we already know the version, use it
-  if (GLANCES_API_VERSION) {
-    const url = `${CONFIG.GLANCES_URL}/api/${GLANCES_API_VERSION}/${endpoint}`;
-    return fetchWithTimeout(url).then(r => {
-      // For v4, some endpoints might return 400 if plugin is disabled; handle gracefully
-      if (!r.ok) {
-        if (suppressErrors) throw new Error("suppressed");
-        throw new Error(`${r.status} ${r.statusText} at ${url}`);
-      }
-      return r.json();
-    });
-  }
-
-  // Otherwise, try v3 first (most common), then v4, then v2
+const detectGlancesVersion = async (): Promise<'2' | '3' | '4' | null> => {
   const versions: ('3' | '4' | '2')[] = ['3', '4', '2'];
-
   for (const v of versions) {
     try {
-      const url = `${CONFIG.GLANCES_URL}/api/${v}/${endpoint}`;
+      const url = `${CONFIG.GLANCES_URL}/api/${v}/cpu/total`; // Use a lightweight endpoint
       const res = await fetchWithTimeout(url);
       if (res.ok) {
-        GLANCES_API_VERSION = v; // Cache the working version
         console.log(`Detected Glances API Version: ${v}`);
-        return await res.json();
+        return v;
       }
     } catch (e) {
       // Continue to next version
     }
   }
-  throw new Error("Could not detect Glances API version");
+  return null;
+};
+
+const fetchGlances = async (endpoint: string, suppressErrors = false) => {
+  // 1. Ensure version is detected (Singleton Pattern)
+  if (!GLANCES_API_VERSION) {
+    if (!versionDetectionPromise) {
+      versionDetectionPromise = detectGlancesVersion();
+    }
+
+    try {
+      const version = await versionDetectionPromise;
+      if (version) {
+        GLANCES_API_VERSION = version;
+      } else {
+        throw new Error("Could not detect Glances API version");
+      }
+    } catch (e) {
+      // Reset promise on failure so we can try again next time
+      versionDetectionPromise = null;
+      throw e;
+    }
+  }
+
+  // 2. Make the actual call
+  const url = `${CONFIG.GLANCES_URL}/api/${GLANCES_API_VERSION}/${endpoint}`;
+  return fetchWithTimeout(url).then(r => {
+    // For v4, some endpoints might return 400 if plugin is disabled; handle gracefully
+    if (!r.ok) {
+      if (suppressErrors) throw new Error("suppressed");
+      throw new Error(`${r.status} ${r.statusText} at ${url}`);
+    }
+    return r.json();
+  });
 };
 
 const getSystemStats = async () => {

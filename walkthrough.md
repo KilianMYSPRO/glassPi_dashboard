@@ -74,7 +74,12 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 - `@dnd-kit/sortable`
 - `@dnd-kit/utilities`
 
-### Key Files Modified
+#### 11. Glances Data Robustness
+- **Issue**: Race condition in API version detection caused initial data fetch failures.
+- **Fix**: Implemented singleton pattern for version detection to ensure only one detection request runs at a time.
+- **Result**: Reliable data loading on the first refresh.
+
+## Known Issues Modified
 - `App.tsx`: Main layout, state management, and section organization.
 - `components/CollapsibleSection.tsx`: New reusable component.
 - `components/ServiceStatus.tsx`: Drag-and-drop implementation.
