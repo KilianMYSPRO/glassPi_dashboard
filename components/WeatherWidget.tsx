@@ -10,6 +10,7 @@ interface WeatherWidgetProps {
 const WeatherWidget: React.FC<WeatherWidgetProps> = ({ services }) => {
     // Logic to determine "weather"
     // Filter out services that shouldn't affect the weather (e.g. intermittent ones like Watchtower)
+    const ignoredServices = services.filter(s => s.name.toLowerCase().includes('watchtower'));
     const activeServices = services.filter(s => !s.name.toLowerCase().includes('watchtower'));
 
     const totalServices = activeServices.length;
@@ -53,6 +54,12 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ services }) => {
                         <Wind size={12} />
                         <span>{totalServices} Active Monitors</span>
                     </div>
+
+                    {ignoredServices.length > 0 && (
+                        <div className="mt-2 text-[10px] text-white/30">
+                            Ignored: {ignoredServices.map(s => s.name).join(', ')}
+                        </div>
+                    )}
                 </div>
                 <div className="p-4 bg-white/5 rounded-full backdrop-blur-sm shadow-xl border border-white/10">
                     {weatherIcon}

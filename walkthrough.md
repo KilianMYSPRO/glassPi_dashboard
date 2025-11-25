@@ -4,41 +4,46 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 
 ## Feature History
 
-### 1. Production Deployment (Latest)
+### 1. Legacy Service Removal (Latest)
+- **Action**: Removed Grafana, Prometheus, and Node Exporter.
+- **Reason**: Simplified the stack as GlassPi provides sufficient monitoring.
+- **Code**: Cleaned up `mockDataService.ts` to remove references.
+
+### 2. Production Deployment
 - **Feature**: Added Docker support for easy deployment.
 - **Implementation**:
     - Created `Dockerfile` (multi-stage build).
-    - Created `docker-compose.yml`.
-    - Created `nginx.conf` for routing and proxying.
+    - Created `docker-compose.yml` (Host Network Mode).
+    - Created `nginx.conf` for routing and proxying (Port 3005).
 
-### 2. AI System Analyst Fix
+### 3. AI System Analyst Fix
 - **Issue**: The AI Analyst was failing to generate reports.
 - **Fix**:
     - Corrected API key access in `geminiService.ts` (switched from `process.env` to `import.meta.env`).
     - Added missing `VITE_GEMINI_API_KEY` to `.env`.
 
-### 3. Collapsible Sections
+### 4. Collapsible Sections
 - **Feature**: Dashboard content is now organized into two collapsible sections: "Active Services" and "System Overview".
 - **Implementation**:
     - Created `CollapsibleSection` component.
     - Refactored `App.tsx` to use these sections.
     - Improves mobile usability by allowing users to hide/show large sections.
 
-### 4. Custom Service Sorting
+### 5. Custom Service Sorting
 - **Feature**: Users can now reorder service cards via drag-and-drop.
 - **Implementation**:
     - Used `@dnd-kit` for drag-and-drop interactions.
     - Persisted sort order in `localStorage`.
     - Updated `ServiceStatus.tsx` to support "Manage Cards" mode with drag handles.
 
-### 5. Uptime Kuma Preview
+### 6. Uptime Kuma Preview
 - **Feature**: A new widget displaying monitors from Uptime Kuma.
 - **Implementation**:
     - Created `UptimeKumaWidget.tsx`.
     - Fetches data from Uptime Kuma Status Page API.
     - Added proxy in `vite.config.ts` to avoid CORS.
 
-### 6. Dashboard Layout Restructuring
+### 7. Dashboard Layout Restructuring
 - **Change**: Reorganized the grid layout for better space utilization.
 - **Details**:
     - **AdGuard Home**: Moved to its own 4-column slot (larger size).
@@ -46,13 +51,14 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
     - **AI Analyst**: Moved to full-width bottom row.
     - **System Health**: Kept in the middle row.
 
-### 7. Weather Widget
+### 8. Weather Widget
 - **Feature**: Visualizes system health as weather conditions (Sunny, Cloudy, Stormy).
 - **Details**:
     - Ignores "watchtower" service to prevent false alarms.
+    - Displays ignored services in the widget for transparency.
     - Dynamic icon and status text.
 
-### 8. Mobile Visibility & Security
+### 9. Mobile Visibility & Security
 - **Improvement**: Better card visibility on mobile devices.
 - **Security**: Moved sensitive credentials (AdGuard) to `.env` file.
 
@@ -81,7 +87,7 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
    ```bash
    docker compose up -d --build
    ```
-3. Access the dashboard at `http://localhost:3000`.
+3. Access the dashboard at `http://raspberrypi:3005` (or `http://localhost:3005`).
 
 ### Manual Build
 1. Install dependencies: `npm install`

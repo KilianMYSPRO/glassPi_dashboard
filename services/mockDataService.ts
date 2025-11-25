@@ -334,7 +334,6 @@ const getIconForService = (name: string) => {
   if (n.includes('glances')) return 'Monitor';
   if (n.includes('npm') || n.includes('nginx')) return 'Globe';
   if (n.includes('watchtower')) return 'RefreshCw';
-  if (n.includes('grafana')) return 'PieChart';
   if (n.includes('pihole')) return 'Shield';
   if (n.includes('plex') || n.includes('jellyfin')) return 'Play';
   if (n.includes('homeassistant')) return 'Home';
