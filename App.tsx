@@ -108,13 +108,13 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8 flex flex-col gap-8 max-w-[1600px] mx-auto">
+    <div className="min-h-screen p-3 md:p-8 flex flex-col gap-4 md:gap-8 max-w-[1600px] mx-auto">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-cyan-200">
+          <h1 className="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-cyan-200">
             GlassPi Monitor
           </h1>
-          <p className="text-blue-200/60 text-sm mt-1 flex items-center gap-2">
+          <p className="text-blue-200/60 text-xs md:text-sm mt-1 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             System Online • Raspberry Pi 5
           </p>
@@ -131,7 +131,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex flex-col gap-8">
+      <main className="flex flex-col gap-4 md:gap-8">
         <CollapsibleSection title="Active Services" defaultOpen={true}>
           <ServiceStatus
             services={getSortedServices(data.services)}
@@ -142,21 +142,21 @@ const App: React.FC = () => {
         </CollapsibleSection>
 
         <CollapsibleSection title="System Overview" defaultOpen={true}>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div className="md:col-span-8 lg:col-span-8 h-[350px]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+            <div className="md:col-span-8 lg:col-span-8 h-[250px] md:h-[350px]">
               <NetworkGraph history={data.speedtestHistory} error={data.speedtestError} />
             </div>
-            <div className="md:col-span-4 lg:col-span-4 h-[350px]">
+            <div className="md:col-span-4 lg:col-span-4 h-[180px] md:h-[350px]">
               <WeatherWidget services={data.services} />
             </div>
 
-            <div className="md:col-span-4 lg:col-span-4 h-[300px]">
+            <div className="md:col-span-4 lg:col-span-4 h-[220px] md:h-[300px]">
               <AdGuardWidget stats={data.adguard} />
             </div>
-            <div className="md:col-span-4 lg:col-span-4 h-[300px]">
+            <div className="md:col-span-4 lg:col-span-4 h-[220px] md:h-[300px]">
               <UptimeKumaWidget monitors={data.kuma} />
             </div>
-            <div className="md:col-span-4 lg:col-span-4 h-[300px]">
+            <div className="md:col-span-4 lg:col-span-4 h-[220px] md:h-[300px]">
               <SystemHealth metrics={data.system} />
             </div>
 
