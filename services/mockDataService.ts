@@ -9,6 +9,8 @@ const CONFIG = {
   GLANCES_URL: 'http://glances.home',
   ADGUARD_URL: import.meta.env.VITE_ADGUARD_URL || '/adguard-api',
   SPEEDTEST_URL: '/speedtest-api',
+  KUMA_URL: '/kuma-api',
+  KUMA_SLUG: import.meta.env.VITE_KUMA_STATUS_SLUG || 'default',
 
   // AdGuard Authentication (Leave empty if none)
   ADGUARD_USERNAME: import.meta.env.VITE_ADGUARD_USERNAME || '',
@@ -244,6 +246,46 @@ const getSpeedtest = async (): Promise<{ result: SpeedTestResult | null; error?:
   }
 };
 
+const getUptimeKumaStatus = async () => {
+  try {
+    // Fetch status page data to get the list of monitors
+    const response = await fetchWithTimeout(`${CONFIG.KUMA_URL}/api/status-page/${CONFIG.KUMA_SLUG}`);
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const publicGroupList = data.publicGroupList || [];
+
+    let monitors: any[] = [];
+    publicGroupList.forEach((group: any) => {
+      if (group.monitorList) {
+        monitors = [...monitors, ...group.monitorList];
+      }
+    });
+
+    // Fetch heartbeat data for status
+    const heartbeatResponse = await fetchWithTimeout(`${CONFIG.KUMA_URL}/api/status-page/heartbeat/${CONFIG.KUMA_SLUG}`);
+    if (heartbeatResponse.ok) {
+      const heartbeatData = await heartbeatResponse.json();
+      const heartbeatList = heartbeatData.heartbeatList || {};
+
+      monitors = monitors.map(m => {
+        const heartbeats = heartbeatList[m.id];
+        const lastHeartbeat = heartbeats ? heartbeats[heartbeats.length - 1] : null;
+        return {
+          ...m,
+          status: lastHeartbeat ? (lastHeartbeat.status === 1 ? 'up' : 'down') : 'unknown',
+          ping: lastHeartbeat ? lastHeartbeat.ping : null
+        };
+      });
+    }
+
+    return monitors;
+  } catch (e) {
+    console.warn("Uptime Kuma fetch failed:", e);
+    return null;
+  }
+};
+
 const getDockerContainers = async () => {
   // If we already know the Docker plugin is not available on this Glances instance, skip to avoid 400 errors
   if (!DOCKER_PLUGIN_AVAILABLE) return null;
@@ -401,7 +443,10 @@ export const fetchDashboardData = async (
     }
 
     return { ...service, displayMetric };
-  });
+  }).sort((a, b) => a.name.localeCompare(b.name));
+
+  // 5. Fetch Uptime Kuma
+  const kumaData = await getUptimeKumaStatus();
 
   return {
     services: finalServices,
@@ -409,6 +454,7 @@ export const fetchDashboardData = async (
     adguard,
     speedtestHistory,
     speedtestError: speedError,
+    kuma: kumaData,
     lastUpdated: new Date()
   };
 };

@@ -13,13 +13,13 @@ Your goal is to provide a brief, witty, but insightful "System Health Report" ba
 
 export const analyzeSystemMetrics = async (data: DashboardState): Promise<string> => {
   try {
-    const apiKey = process.env.API_KEY;
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
       return "Error: API Key is missing. Please check your environment configuration.";
     }
 
     const ai = new GoogleGenAI({ apiKey });
-    
+
     // Convert data to a simplified string to save tokens and focus on important metrics
     const context = JSON.stringify({
       cpu: `${data.system.cpuUsage}%`,
