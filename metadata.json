@@ -1,0 +1,5 @@
+{
+  "name": "GlassPi Monitor",
+  "description": "A stunning, glassmorphism-styled dashboard for monitoring HomeLab services like Uptime Kuma, AdGuard, and Glances. Features AI-powered system analysis.",
+  "requestFramePermissions": []
+}
