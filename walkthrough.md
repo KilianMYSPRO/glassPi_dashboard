@@ -58,6 +58,7 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
     - Ignores "watchtower" service to prevent false alarms.
     - Displays ignored services in the widget for transparency.
     - Dynamic icon and status text.
+    - Immersive CSS animations for Sunny (shine), Rainy (rain drops), and Stormy (lightning) states.
 
 ### 9. Mobile Visibility & Security
 - **Improvement**: Better card visibility on mobile devices.
