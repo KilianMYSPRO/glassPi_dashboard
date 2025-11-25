@@ -21,6 +21,7 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 - **Fix**:
     - Corrected API key access in `geminiService.ts` (switched from `process.env` to `import.meta.env`).
     - Added missing `VITE_GEMINI_API_KEY` to `.env`.
+    - Added scrollable container for long reports on mobile.
 
 ### 4. Collapsible Sections
 - **Feature**: Dashboard content is now organized into two collapsible sections: "Active Services" and "System Overview".
