@@ -113,7 +113,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({ history, error }) => {
             </div>
           )}
           <div className="w-full h-full absolute inset-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <AreaChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorDown" x1="0" y1="0" x2="0" y2="1">
