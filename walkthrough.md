@@ -84,6 +84,7 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 - **Charts**: Fixed Recharts height error by enforcing minimum height on container.
 - **Performance**: Removed unnecessary Tailwind CDN script from production build.
 - **Styles**: Restored Tailwind CSS by installing dependencies (`tailwindcss@3`, `autoprefixer`), configuring PostCSS, and adding directives to `index.css`.
+- **Configuration**: Updated service URL mapping to correctly point DuoGym to `http://duogym.home`.
 
 ## Known Issues Modified
 - `App.tsx`: Main layout, state management, and section organization.
