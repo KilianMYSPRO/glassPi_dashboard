@@ -86,6 +86,7 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 - **Styles**: Restored Tailwind CSS by installing dependencies (`tailwindcss@3`, `autoprefixer`), configuring PostCSS, and adding directives to `index.css`.
 - **Configuration**: Updated service URL mapping to correctly point DuoGym to `http://duogym.home`.
 - **Features**: Implemented auto-refresh (polling every 5 seconds) to ensure dashboard data is always up-to-date and recovers from initial fetch delays.
+- **Stability**: Optimized Docker container fetching to respect Glances API version, preventing 400 errors in the console. Fixed Recharts `width(-1)` error.
 
 ## Known Issues Modified
 - `App.tsx`: Main layout, state management, and section organization.

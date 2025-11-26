@@ -110,7 +110,6 @@ const getSystemStats = async () => {
     let cpuUsage = 0;
     if (cpuRes.status === 'fulfilled') {
       const c = cpuRes.value;
-      console.log('Glances CPU Response:', c); // Debug log
 
       if (typeof c === 'number') {
         cpuUsage = c;
@@ -318,14 +317,27 @@ const getDockerContainers = async () => {
   try {
     let containers = null;
 
-    try {
-      containers = await fetchGlances('docker/containers', true);
-    } catch (e) {
-      // Fallback for API v4 or missing docker plugin
+    // API v4 uses 'containers', v3 uses 'docker/containers'
+    // We prioritize based on detected version to avoid 400 errors
+    if (GLANCES_API_VERSION === '4') {
       try {
         containers = await fetchGlances('containers', true);
-      } catch (e2) {
+      } catch (e) {
+        // If v4 fails on 'containers', maybe it's a weird setup, try old one? 
+        // Or just assume plugin missing.
         DOCKER_PLUGIN_AVAILABLE = false;
+      }
+    } else {
+      // v3 or v2 or unknown
+      try {
+        containers = await fetchGlances('docker/containers', true);
+      } catch (e) {
+        // Fallback for API v4 if we guessed wrong or if it's actually v4
+        try {
+          containers = await fetchGlances('containers', true);
+        } catch (e2) {
+          DOCKER_PLUGIN_AVAILABLE = false;
+        }
       }
     }
 
