@@ -28,15 +28,25 @@ const App: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const newData = await fetchDashboardData([], []);
+        const newData = await fetchDashboardData(
+          stateRef.current?.speedtestHistory || [],
+          stateRef.current?.services || []
+        );
         setData(newData);
         setLoading(false);
       } catch (error) {
-        console.error("Failed to load initial data", error);
+        console.error("Failed to load data", error);
         setLoading(false);
       }
     };
+
+    // Initial load
     loadData();
+
+    // Auto-refresh every 5 seconds
+    const intervalId = setInterval(loadData, 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleReorder = (newOrder: string[]) => {
