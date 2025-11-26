@@ -79,6 +79,11 @@ I have significantly enhanced the GlassPi Monitor with new features, improved la
 - **Fix**: Implemented singleton pattern for version detection to ensure only one detection request runs at a time.
 - **Result**: Reliable data loading on the first refresh.
 
+### 12. Bug Fixes
+- **CPU Data**: Fixed parsing logic to correctly handle `0` values from Glances API.
+- **Charts**: Fixed Recharts height error by enforcing minimum height on container.
+- **Performance**: Removed unnecessary Tailwind CDN script from production build.
+
 ## Known Issues Modified
 - `App.tsx`: Main layout, state management, and section organization.
 - `components/CollapsibleSection.tsx`: New reusable component.

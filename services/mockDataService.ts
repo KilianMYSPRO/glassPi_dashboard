@@ -110,8 +110,15 @@ const getSystemStats = async () => {
     let cpuUsage = 0;
     if (cpuRes.status === 'fulfilled') {
       const c = cpuRes.value;
-      // Handle: { total: 10 } OR 10 (v2 vs v3 differences)
-      cpuUsage = typeof c === 'number' ? c : (c.total || (c.user + c.system) || 0);
+      console.log('Glances CPU Response:', c); // Debug log
+
+      if (typeof c === 'number') {
+        cpuUsage = c;
+      } else if (c && typeof c.total !== 'undefined') {
+        cpuUsage = c.total;
+      } else if (c && (c.user !== undefined || c.system !== undefined)) {
+        cpuUsage = (c.user || 0) + (c.system || 0);
+      }
     }
 
     // 2. Memory
