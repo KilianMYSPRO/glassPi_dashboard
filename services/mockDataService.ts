@@ -372,6 +372,7 @@ const getUrlForService = (name: string) => {
   if (n.includes('glances')) return CONFIG.GLANCES_URL;
   if (n.includes('npm')) return 'http://npm.home';
   if (n.includes('speed')) return CONFIG.SPEEDTEST_URL;
+  if (n.includes('duo') || n.includes('gym')) return 'http://duogym.home';
   return `http://${n}.home`;
 };
 
