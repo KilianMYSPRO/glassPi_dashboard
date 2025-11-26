@@ -105,7 +105,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({ history, error }) => {
           {hasData ? JSON.stringify(history.slice(-3), null, 2) : "No data in history array."}
         </div>
       ) : (
-        <div className="flex-1 w-full relative min-h-0">
+        <div className="flex-1 w-full relative min-h-[180px]">
           {!hasData && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-10 bg-slate-900/20 backdrop-blur-sm rounded">
               <AlertCircle className="mb-2 opacity-50" />
